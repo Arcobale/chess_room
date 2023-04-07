@@ -95,7 +95,7 @@ export default {
 
 .gobang {
     width: 100vw;
-    height: 100vw;
+    height: 100vh;
     background: url('@/assets/background2.jpg') no-repeat center fixed;
     background-size: 100% 100%;
     overflow-y: hidden;
