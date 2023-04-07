@@ -1,5 +1,5 @@
 <template>
-  <Golang/>
+  <router-view></router-view>
 </template>
 
 <script>

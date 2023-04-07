@@ -1,7 +1,9 @@
 <template>
     <div class="gobang">
         <div class="orderInfo">
-            <div class="order" :class="{ 'player1': blackOrder, 'player2': !blackOrder }"></div><p>Your turn</p>
+            <div class="orderWrapper">
+                <div class="order" :class="{ 'player1': blackOrder, 'player2': !blackOrder }"></div><p>Your turn</p>
+            </div>
         </div>
         <table>
             <tr v-for="(row, x) in data.chessBoard" :key="x">
@@ -65,7 +67,7 @@ export default {
                 data.chessBoard[px][py] = 0;
                 blackArr.pop();
             }
-            blackOrder = !blackOrder;
+            blackOrder.value = !blackOrder.value;
         };
 
         // 开始新游戏
@@ -92,37 +94,48 @@ export default {
 }
 
 .gobang {
+    width: 100vw;
+    height: 100vw;
+    background: url('@/assets/background2.jpg') no-repeat center fixed;
+    background-size: 100% 100%;
+    overflow-y: hidden;
     display: flex;
     justify-content: space-around;
 }
 
+/* 提示信息 */
 .orderInfo {
     position: relative;
     background-color:olivedrab;
     color: white;
     width: 200px;
-    height: 100%;
+    height: 100px;
     text-align: center;
     font-size: 25px;
-    left:200px;
-    top: 150px;
     padding: 20px 0;
     border-radius: 10%;
 }
 
-.orderInfo p {
-    display: block;
-    position: relative;
+.orderWrapper {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 .order {
-    float: left;
+    display: inline;
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    margin-left: 20px;
 }
 
+/* 棋盘 */
 table {
     background: url(@/assets/golangBoard.jpg) no-repeat;
     background-size: 100%;
@@ -146,12 +159,11 @@ td {
     background-color: white;
 }
 
+/* 游戏选项 */
 .option {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     position: relative;
-    right: 200px;
 }
 
 button {
