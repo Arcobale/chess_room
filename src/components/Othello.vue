@@ -37,7 +37,7 @@
 
 <script>
 import { reactive, onMounted, computed } from 'vue';
-import { allowDrop, reverse } from '@/utils/othelloRules';
+import { allowDrop, reverse, gameOver, isOver } from '@/utils/othelloRules';
 export default {
     setup() {
         const data = reactive({
@@ -86,18 +86,17 @@ export default {
             return num;
         });
 
-        const gameOver = () => {
-            setTimeout(() => {
-                if (numOfBlack > numOfWhite) {
-                    alert('游戏结束，黑方获胜！');
-                } else if (numOfBlack < numOfWhite) {
-                    alert('游戏结束，白方获胜！');
-                } else {
-                    alert('游戏结束，平局！');
+        const restPoint = computed(() => {
+            let arr = [];
+            for (let i = 0; i < data.chessBoard.length; i++) {
+                for (let j = 0; j < data.chessBoard[0].length; j++) {
+                    if (data.chessBoard[i][j] == 0) {
+                        arr.push([i, j]);
+                    }
                 }
-                location.reload();
-            }, 100);
-        }
+            }
+            return arr;
+        });
 
         // 落棋事件
         const drop = (event) => {
@@ -125,14 +124,11 @@ export default {
                 reverse(x, y, -1, 1, data.chessBoard, data.blackOrder);
                 data.blackOrder = !data.blackOrder;
 
-                // 如果棋盘已经走满
-                if (numOfBlack + numOfWhite == Math.pow(data.chessBoard.length, 2)) {
-                    gameOver();
+                // 如果棋盘已经走满 或 棋盘再无可下的位置
+                if (numOfBlack.value + numOfWhite.value == Math.pow(data.chessBoard.length, 2)
+                 || isOver(restPoint, data.chessBoard, data.blackOrder)) {
+                    gameOver(numOfBlack.value, numOfWhite.value);
                 }
-                // 如果棋盘再无可下的位置
-                // if (is) {
-                //     gameOver();
-                // }
             }
         };
 
@@ -190,6 +186,7 @@ export default {
             data,
             numOfBlack,
             numOfWhite,
+            restPoint,
             drop,
             // back,
             newGame,

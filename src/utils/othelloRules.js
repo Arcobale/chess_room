@@ -97,3 +97,25 @@ export function reverse(a, b, w, v, board, order) {
         }
     }
 }
+
+export function gameOver(numOfBlack, numOfWhite) {
+    setTimeout(() => {
+        if (numOfBlack > numOfWhite) {
+            alert('游戏结束，黑方获胜！');
+        } else if (numOfBlack < numOfWhite) {
+            alert('游戏结束，白方获胜！');
+        } else {
+            alert('游戏结束，平局！');
+        }
+        location.reload();
+    }, 100);
+}
+
+export function isOver(restPoint, board, order) {
+    for (let position of restPoint.value) {
+        if (allowDrop(position[0], position[1], board, order)) {
+            return false;
+        }
+    }
+    return true;
+}
