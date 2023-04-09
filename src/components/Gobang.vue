@@ -2,7 +2,7 @@
     <div class="gobang">
         <div class="orderInfo">
             <div class="orderWrapper">
-                <div class="order" :class="{ 'player1': blackOrder, 'player2': !blackOrder }"></div><p>Your turn</p>
+                <div class="order" :class="{ 'player1': blackOrder, 'player2': !blackOrder }"></div><p>当前回合</p>
             </div>
         </div>
         <table>
@@ -13,16 +13,17 @@
         </table>
         <div class="option">
             <!-- 开始新游戏 -->
-            <button @click="newGame">New Game</button>
+            <button @click="newGame">重新开始</button>
             <!-- 悔棋 -->
-            <button @click="back">Undo</button>
+            <button @click="back">悔棋</button>
+            <router-link to="/home"><button>返回主页</button></router-link>
         </div>
     </div>
 </template>
 
 <script>
 import { reactive, ref } from 'vue';
-import { XWin, YWin, X_YWin, Y_XWin } from '@/utils/golangRules';
+import { XWin, YWin, X_YWin, Y_XWin } from '@/utils/gobangRules';
 export default {
     setup() {
         const data = reactive({

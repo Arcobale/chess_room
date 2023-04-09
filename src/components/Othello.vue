@@ -4,20 +4,11 @@
         <div class="orderInfo">
             <div class="orderWrapper">
                 <div class="order" :class="{ 'player1': data.blackOrder, 'player2': !data.blackOrder }"></div>
-                <p>Your turn</p>
+                <p>当前回合</p>
             </div>
         </div>
-
         <!-- 棋盘 -->
-        <div id="board" @click="drop" @mouseover="isAllow" @mouseout="removeClass">
-            <!-- <h3 class="black-pass" v-if="blackOrder">
-                <span class="label label-primary">黑子跳过</span>
-            </h3>
-            <h3 class="white-pass" v-if="blackOrder">
-                <span class="label label-primary">白子跳过</span>
-            </h3> -->
-        </div>
-
+        <div id="board" @click="drop" @mouseover="isAllow" @mouseout="removeClass"></div>
         <!-- 游戏选项 -->
         <div class="option">
             <button>
@@ -28,15 +19,16 @@
                 白子得分
                 <span class="badge white">{{ numOfWhite }}</span>
             </button>
-            <button @click="newGame">New Game</button>
-            <!-- <button @click="back">Undo</button> -->
+            <button @click="newGame">重新开始</button>
+            <!-- <button @click="back">悔棋</button> -->
+            <router-link to="/home"><button>返回主页</button></router-link>
         </div>
     </div>
 </template>
 
 
 <script>
-import { reactive, onMounted, computed } from 'vue';
+import { reactive, onMounted, computed, onUpdated } from 'vue';
 import { allowDrop, reverse, gameOver, isOver } from '@/utils/othelloRules';
 export default {
     setup() {
@@ -44,9 +36,6 @@ export default {
             chessBoard: Array(8).fill(0).map(() => Array(8).fill(0)),
             blackOrder: true,
         })
-
-        // true为黑手，false为白手
-        // let blackOrder = ref(true);
 
         onMounted(() => {
             data.chessBoard[3][3] = 2;
@@ -64,6 +53,7 @@ export default {
                     board.appendChild(cell);
                 }
             }
+            addDropInfo();
         });
 
         const numOfBlack = computed(() => {
@@ -98,12 +88,47 @@ export default {
             return arr;
         });
 
+        const currentAllow = computed(() => {
+            let arr = [];
+            for (let i = 0; i < data.chessBoard.length; i++) {
+                for (let j = 0; j < data.chessBoard[0].length; j++) {
+                    if (allowDrop(i, j, data.chessBoard, data.blackOrder) && data.chessBoard[i][j] == 0) {
+                        // let element = document.getElementById(i * data.chessBoard.length + j);
+                        // element.classList.add("dashed");
+                        arr.push([i, j]);
+                    }
+                }
+            }
+            return arr;
+        });
+
+        onUpdated(() => {
+            addDropInfo();
+        })
+
+        // 添加落棋提示
+        const addDropInfo = () => {
+            for (let position of currentAllow.value) {
+                let element = document.getElementById(position[0] * data.chessBoard.length + position[1]);
+                element.classList.add("dashed");
+            }
+        };
+
+        // 去除落棋提示
+        const removeDropInfo = () => {
+            for (let position of currentAllow.value) {
+                let element = document.getElementById(position[0] * data.chessBoard.length + position[1]);
+                element.classList.remove("dashed");
+            }
+        };
+
         // 落棋事件
         const drop = (event) => {
             let x = parseInt(event.target.dataset.x);
             let y = parseInt(event.target.dataset.y);
             // 若该点可以放置棋子
             if (allowDrop(x, y, data.chessBoard, data.blackOrder)) {
+                removeDropInfo();
                 // 落棋
                 let element = document.getElementById(x * data.chessBoard.length + y);
                 if (data.blackOrder) {
@@ -122,11 +147,12 @@ export default {
                 reverse(x, y, 1, -1, data.chessBoard, data.blackOrder);
                 reverse(x, y, -1, -1, data.chessBoard, data.blackOrder);
                 reverse(x, y, -1, 1, data.chessBoard, data.blackOrder);
+
                 data.blackOrder = !data.blackOrder;
 
                 // 如果棋盘已经走满 或 棋盘再无可下的位置
                 if (numOfBlack.value + numOfWhite.value == Math.pow(data.chessBoard.length, 2)
-                 || isOver(restPoint, data.chessBoard, data.blackOrder)) {
+                    || isOver(restPoint, data.chessBoard, data.blackOrder)) {
                     gameOver(numOfBlack.value, numOfWhite.value);
                 }
             }
@@ -153,7 +179,13 @@ export default {
                 let x = parseInt(event.target.dataset.x);
                 let y = parseInt(event.target.dataset.y);
                 if (data.chessBoard[x][y] == 0) {
-                    document.getElementById(x * data.chessBoard.length + y).className = '';
+                    let element = document.getElementById(x * data.chessBoard.length + y);
+                    element.classList.remove("allow");
+                    if (data.blackOrder) {
+                        element.classList.remove("player1");
+                    } else {
+                        element.classList.remove("player2");
+                    }
                 }
             }
         }
@@ -178,7 +210,7 @@ export default {
         // };
 
         // 开始新游戏
-        
+
         const newGame = () => {
             location.reload();
         }
@@ -281,6 +313,10 @@ export default {
     opacity: 50%;
 }
 
+.dashed {
+    border: 1px dashed;
+}
+
 /* 游戏选项 */
 .option {
     display: flex;
@@ -298,5 +334,13 @@ button {
     border-radius: 10%;
     color: white;
     cursor: pointer;
+}
+
+/* 视图改变 */
+@media only screen and (max-width: 600px) {
+    #board {
+        width: 50vw;
+        height: 50vw;
+    }
 }
 </style>

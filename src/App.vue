@@ -3,13 +3,9 @@
 </template>
 
 <script>
-import Golang from './components/Golang.vue'
 
 export default {
   name: 'App',
-  components: {
-    Golang,
-  }
 }
 </script>
 

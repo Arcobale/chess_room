@@ -17,7 +17,7 @@ const router = createRouter({
         {
             path: '/golang',
             name: '五子棋',
-            component: () => import('@/components/Golang'),
+            component: () => import('@/components/Gobang'),
         },
         {
             path: '/othello',
