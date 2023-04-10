@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <router-link to="/golang"><button>五子棋</button></router-link>
+        <router-link to="/gobang-online"><button>五子棋</button></router-link>
         <router-link to="/othello"><button>黑白棋</button></router-link>
     </div>
 </template>

@@ -9,8 +9,13 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "cors": "^2.8.5",
+    "isomorphic-ws": "^5.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "uuid": "^9.0.0",
     "vue": "^3.2.13",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

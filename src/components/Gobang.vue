@@ -2,7 +2,8 @@
     <div class="gobang">
         <div class="orderInfo">
             <div class="orderWrapper">
-                <div class="order" :class="{ 'player1': blackOrder, 'player2': !blackOrder }"></div><p>当前回合</p>
+                <div class="order" :class="{ 'player1': blackOrder, 'player2': !blackOrder }"></div>
+                <p>当前回合</p>
             </div>
         </div>
         <table>
@@ -28,12 +29,14 @@ export default {
     setup() {
         const data = reactive({
             chessBoard: Array(19).fill(0).map(() => Array(19).fill(0))
-        })
+        });
+
 
         let blackArr = [];
         let whiteArr = [];
         // true为黑手，false为白手
         let blackOrder = ref(true);
+        let ws;
 
         // 落棋事件
         const drop = (x, y) => {
@@ -57,7 +60,7 @@ export default {
         // 悔棋事件
         const back = () => {
             // 如果现在是黑手，则悔棋操作发生在白手
-            if (blackOrder) {
+            if (blackOrder.value) {
                 let [px, py] = whiteArr[whiteArr.length - 1];
                 // 最后一个棋子所在位置置空
                 data.chessBoard[px][py] = 0;
@@ -74,7 +77,8 @@ export default {
         // 开始新游戏
         const newGame = () => {
             location.reload();
-        }
+        };
+
         return {
             data,
             blackOrder,
@@ -107,7 +111,7 @@ export default {
 /* 提示信息 */
 .orderInfo {
     position: relative;
-    background-color:olivedrab;
+    background-color: olivedrab;
     color: white;
     width: 200px;
     height: 100px;

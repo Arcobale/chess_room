@@ -15,9 +15,14 @@ const router = createRouter({
             component: () => import('@/components/Home'),
         },
         {
-            path: '/golang',
+            path: '/gobang',
             name: '五子棋',
             component: () => import('@/components/Gobang'),
+        },
+        {
+            path: '/gobang-online',
+            name: '五子棋联机',
+            component: () => import('@/components/GobangOnline'),
         },
         {
             path: '/othello',
